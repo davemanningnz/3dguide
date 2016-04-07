@@ -1,0 +1,9 @@
+bower_components
+cesium
+
+bin
+.vs
+node_modules
+obj
+packages
+.ntvs_analysis.dat
