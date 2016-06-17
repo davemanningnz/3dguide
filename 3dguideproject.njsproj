@@ -23,6 +23,7 @@
   <ItemGroup>
     <Compile Include="Cesium.js" />
     <Compile Include="cesium\Source\Extensions\GlobeSurfaceTileExt.js" />
+    <Compile Include="cesium\Source\Extensions\JavaScript.js" />
     <Compile Include="gulpfile.js" />
     <Compile Include="ng-cesium\module.js" />
     <Compile Include="src\controller.js" />

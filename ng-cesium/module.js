@@ -1,8 +1,6 @@
 ﻿(function () {
 
     var module = angular.module('ngCesium', []);
-    
-    var viewerFactory = Cesium.Viewer;
 
     module.directive('ngCesiumViewer', function () {
 
@@ -12,6 +10,8 @@
                 onClick: '&'
             },
             link: function(scope, element, attrs) {
+                var viewerFactory = Cesium.Viewer;
+
                 var viewer = new viewerFactory(element[0],{
                     imageryProvider : new Cesium.UrlTemplateImageryProvider({
                         url : 'https://{s}/cycle/{z}/{x}/{y}.png',
