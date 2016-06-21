@@ -11,11 +11,12 @@
         var report = new avyReport();
 
         vm.angle = 0;
-
+        vm.showGaribaldi = showGaribaldi;
+        vm.testPath = testPath;
         vm.viewerClicked = function (cartesian, normal) {
             var cartographic = Cesium.Cartographic.fromCartesian(cartesian);
-            vm.longitude = Cesium.Math.toDegrees(cartographic.longitude).toFixed(2);
-            vm.latitude = Cesium.Math.toDegrees(cartographic.latitude).toFixed(2);
+            vm.longitude = Cesium.Math.toDegrees(cartographic.longitude).toFixed(8);
+            vm.latitude = Cesium.Math.toDegrees(cartographic.latitude).toFixed(8);
             vm.height = cartographic.height;
 
             vm.angle = Cesium.Cartesian3.angleBetween(cartesian, normal) * 180.0 / Math.PI;
@@ -92,7 +93,7 @@
             var rayA = new Cesium.Ray(origin, Cesium.Cartesian3.subtract(cartesian, origin, new Cesium.Cartesian3()));
             var rayB = new Cesium.Ray(origin, Cesium.Cartesian3.subtract(lastPoint, origin, new Cesium.Cartesian3()));
 
-            var fill = vm.viewer.scene.globe.fillPath(
+            var tiles = vm.viewer.scene.globe.fillPath(
                 rayA
                 , rayB
                 , vm.viewer.scene
@@ -112,84 +113,29 @@
             //filledPath = createPath(fill); 
             path = createPath(points);
 
-            vm.fill = fill.map(function(c){ return Cesium.Cartographic.fromCartesian(c) });
+            //vm.fill = fill.map(function(c){ return Cesium.Cartographic.fromCartesian(c) });
 
-            var imap = new Map();
+            for (var tileIndex = 0; tileIndex < tiles.length; tileIndex++){
 
-            for (var index = 0; index < fill.length; index += 2) {
-                vm.viewer.entities.add(
-                {
-                     polyline : {
-                        positions : [fill[index], fill[index + 1]],
-                        width : 5,
-                        material : new Cesium.PolylineArrowMaterialProperty(Cesium.Color.RED)
-                    }
-                    // position : fill[index],
-                    // point : {
-                    //     pixelSize : 2,
-                    //     color : Cesium.Color.RED,
-                    // }
-                });
+                var tileColour = Cesium.Color.fromRandom({alpha: 1.0});
 
-                imap[fill[index]] = [fill[index], fill[index + 1]];
-            }
-
-            for (var candiadate in imap) {
-                var cur = imap[candiadate];
-                if (cur) {
-                    while (cur && imap[cur[cur.length - 1]]) {
-                        var next = cur[cur.length - 1];
-                        cur.pop();
-                        cur = cur.concat(imap[next]);
-                        imap[candiadate] = cur;
-                        imap[next] = false;
+                var sections = tiles[tileIndex];
+                
+                for (var sectionIndex = 0; sectionIndex < sections.length; sectionIndex++) {
+                    var cur = sections[sectionIndex];
+                    if (cur) {
+                        vm.viewer.entities.add(
+                        {
+                            polyline : {
+                                positions : cur,
+                                width : 15,
+                                material : new Cesium.PolylineArrowMaterialProperty(tileColour)
+                            }
+                        });
                     }
                 }
+
             }
-
-            for (var candiadate in imap) {
-                var cur = imap[candiadate];
-                if (cur) {
-                    vm.viewer.entities.add(
-                    {
-                        polyline : {
-                            positions : cur,
-                            width : 15,
-                            material : new Cesium.PolylineArrowMaterialProperty(Cesium.Color.fromAlpha(Cesium.Color.BLUE, 0.25))
-                        }
-                    });
-                }
-            }
-
-
-            // var entity = vm.viewer.entities.add({
-            //     polyline : {
-            //         positions : fill,
-            //         width : 5,
-            //         material : Cesium.Color.RED
-            //     }
-            // });
-
-            // vm.viewer.entities.add({
-            // polyline : {
-            //     positions : [rayA.origin, Cesium.Ray.getPoint(rayA, 100000)],
-            //     width : 5,
-            //     material : Cesium.Color.BLUE
-            // }
-            // });
-
-            // vm.viewer.entities.add({
-            // polyline : {
-            //     positions : [rayB.origin, Cesium.Ray.getPoint(rayB, 100000)],
-            //     width : 5,
-            //     material : Cesium.Color.BLUE
-            // }
-            // });
-            // var center = fill[0];
-            // var heading = Cesium.Math.toRadians(50.0);
-            // var pitch = Cesium.Math.toRadians(-90.0);
-            // var range = 5000.0;
-            // vm.viewer.camera.lookAt(center, new Cesium.HeadingPitchRange(heading, pitch, range));
         }
 
         function avyReport(){
@@ -240,6 +186,20 @@
 
             return this;
         }
+        
+        function showGaribaldi(){
+            
+            vm.viewer.camera.setView({
+                destination : Cesium.Rectangle.fromDegrees(-123.1, 49.8, -122.9, 49.9)
+            });
+                    
+        }
+        
+        function testPath(){
+            extendPath(Cesium.Cartesian3.fromDegrees(-123.01170273, 49.88335161))
+            extendPath(Cesium.Cartesian3.fromDegrees(-123.00556561, 49.85082148))
+        }
+        
     });
 
 })();

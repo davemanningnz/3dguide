@@ -41,6 +41,8 @@
 						{{point.latitude}}:{{point.longitude}}:{{point.height}}
 					</li> 
 				</ul>
+				<button ng-click="vm.showGaribaldi()">Show Garibaldi</button>
+				<button ng-click="vm.testPath()">Test Path</button>
 			</div>
 			<div class="col-lg-10">
 				<ng-cesium-viewer viewer="vm.viewer" on-click="vm.viewerClicked(cartesian, normal)" />
