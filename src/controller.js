@@ -6,7 +6,8 @@
         var vm = this;
         var path;
         var filledPath;
-        var points = [];   
+        var points = [];  
+        var pathSections = []; 
         
         var report = new avyReport();
 
@@ -90,12 +91,10 @@
             var lastPoint = points[points.length - 1];
             var origin = vm.viewer.camera.position;
             
-            var rayA = new Cesium.Ray(origin, Cesium.Cartesian3.subtract(cartesian, origin, new Cesium.Cartesian3()));
-            var rayB = new Cesium.Ray(origin, Cesium.Cartesian3.subtract(lastPoint, origin, new Cesium.Cartesian3()));
-
             var tiles = vm.viewer.scene.globe.fillPath(
-                rayA
-                , rayB
+                origin
+                , lastPoint
+                , cartesian
                 , vm.viewer.scene
             );
 
@@ -124,6 +123,7 @@
                 for (var sectionIndex = 0; sectionIndex < sections.length; sectionIndex++) {
                     var cur = sections[sectionIndex];
                     if (cur) {
+                        pathSections.push(cur);
                         vm.viewer.entities.add(
                         {
                             polyline : {
@@ -136,6 +136,15 @@
                 }
 
             }
+
+            vm.pathDistance = pathSections.reduce(function(previous, current){
+                return previous + current.reduce(function(prevSum, curPoint, pointIndex, array){
+                    if (pointIndex > 0){
+                        return prevSum + Cesium.Cartesian3.distance(curPoint, array[pointIndex - 1]);
+                    }
+                    return prevSum + 0;
+                }, 0);
+            }, 0);
         }
 
         function avyReport(){
