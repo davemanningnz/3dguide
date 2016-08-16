@@ -26,26 +26,30 @@
 			<div class="col-lg-2">
 				<dl>
 					<dt>Longitude</dt>
-					<dd>{{vm.longitude}}</dd>
+					<dd>{{vm.lastClick.cartographicPosition.longitude}}</dd>
 					<dt>Latitude</dt>
-					<dd>{{vm.latitude}}</dd>
+					<dd>{{vm.lastClick.cartographicPosition.latitude}}</dd>
 					<dt>Elevation</dt>
-					<dd>{{vm.height}}</dd>
-					<dt>Angle</dt>
-					<dd>{{vm.angle}}</dd>
+					<dd>{{vm.lastClick.cartographicPosition.height}}</dd>
 					<dt>Aspect</dt>
-					<dd>{{vm.aspect}}</dd>
-
-					<dt>Path Distance</dt>
-					<dd>{{vm.pathDistance}}</dd>
+					<dd>{{vm.lastClick.hpr.heading}}</dd>
+					<dt>Angle</dt>
+					<dd>{{vm.lastClick.hpr.pitch}}</dd>
 				</dl>
-				<ul>
-					<li ng-repeat="point in vm.fill">
-						{{point.latitude}}:{{point.longitude}}:{{point.height}}
-					</li> 
-				</ul>
+
+				<dl>
+					<dt>Ascent</dt>
+					<dd>{{vm.currentRoute.stats.ascent}}</dd>
+					<dt>Descent</dt>
+					<dd>{{vm.currentRoute.stats.descent}}</dd>
+					<dt>Pitch</dt>
+					<dd>{{vm.currentRoute.stats.pitch}}</dd>
+				</dl>
+
 				<button ng-click="vm.showGaribaldi()">Show Garibaldi</button>
 				<button ng-click="vm.testPath()">Test Path</button>
+				<button ng-click="vm.newRouteClicked()">New Route</button>
+				<button ng-click="vm.diverageOverlayClicked()">Divergence</button>
 			</div>
 			<div class="col-lg-10">
 				<ng-cesium-viewer viewer="vm.viewer" on-click="vm.viewerClicked(cartesian, normal)" />

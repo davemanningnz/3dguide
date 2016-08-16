@@ -14,8 +14,10 @@
 
                 var viewer = new viewerFactory(element[0],{
                     imageryProvider : new Cesium.UrlTemplateImageryProvider({
-                        url : 'https://{s}/cycle/{z}/{x}/{y}.png',
-                        subdomains: ['a.tile.thunderforest.com', 'b.tile.thunderforest.com', 'c.tile.thunderforest.com']
+                        url: 'http://{s}/vt/lyrs=s&hl=en&x={x}&y={y}&z={z}&s=Ga',
+                        subdomains: ['mt0.google.com', 'mt1.google.com']
+                        //url : 'https://{s}/cycle/{z}/{x}/{y}.png',
+                        //subdomains: ['a.tile.thunderforest.com', 'b.tile.thunderforest.com', 'c.tile.thunderforest.com']
                     }),
                     baseLayerPicker: false
                 });
